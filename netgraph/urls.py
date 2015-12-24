@@ -12,6 +12,12 @@ urlpatterns = [
     ),
 
     url(
+        r'^dashboard/$',
+        views.dashboard,
+        name='dashboard',
+    ),
+
+    url(
         r'^projects/$',
         views.home,
         name='home'

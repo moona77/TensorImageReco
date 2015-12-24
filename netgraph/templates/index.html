@@ -2,30 +2,20 @@
 {% load i18n %}
 {% block content %}
 
- 
-
-<table class="sort table">
-<thead>
-<tr>
-<th>Project</th>
-<th># of nodes</th>
-<th># of links</th>
-<tbody>
-{% for prj in projects %} 
-<tr>
-<th><a href="/projects/{{ prj.slug }}">{{ prj }}</a></th>
-<th>{{ prj.nodeset_set.count }}</a></th>
-<th>{{ prj.network_set.count }}</a></th>
-</tr>
-
-{% endfor %}
-</tbody>
-</table>
+{% block breadcrumbs %}
 
 
+{% endblock %}
 
-</div>
-</div>
+
+<h1><a href="{% url 'home' %}">Welcome to Webminer v0.1</a></h1>
+
+<div>
+안녕하세요 웹마이너입니다.<br>
+웹마이너는 웹에서 간단한 소셜네트워크분석을 지원하기 위해서 만들어졌습니다.<br>
+project 단위별로 자료를 관리하실 수 있습니다<br>
+새로운 project를 추가하시고 자신만의 자료를 분석하세요<br>
+project들은 dashboard를 통하여 관리할 수 있습니다.<br>
 </div>
 
 {% endblock %}

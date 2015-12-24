@@ -1,12 +1,31 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Project, Nodeset, Network
- 
+
 import os, sys, csv, json
 import networkx as nx
 
 
-
 def home(request):
+    """
+    Home page of Weblate showing list of projects, stats
+    and user links if logged in.
+    """
+
+    projects = Project.objects.all()
+
+
+    return render(
+        request,
+        'index.html',
+        {
+             'projects': projects,
+        }
+    )
+
+
+
+
+def dashboard(request):
     """
     Home page of Weblate showing list of projects, stats
     and user links if logged in.

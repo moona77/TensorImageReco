@@ -98,14 +98,20 @@ rect.selection {
 
 <div id="app-body">
 
-    <div id="mode-select" class="btn-group">
-      <button class="btn btn-primary active" onclick="setAppMode(MODE.EDIT)">
-        Edit Model
-      </button>
-
-      <button class="btn btn-primary" onclick="setAppMode(MODE.EVAL)">
-       Evaluate Formula
-      </button>
+    <div id="mode-select">
+      <ul>
+        <li>노드추가 : 빈공간 마우스 왼쪽 클릭 </li>
+        <li>노드 선택 : 선택할 노드 마우스 왼쪽 클릭</li>
+        <li>노드 수정 : 노드 선택 후 아래 편집창에서 수정</li>
+        <li>링크 추가 : 소스 노드 선택 후 타켓 노드 선택</li>
+        <li>링크 선택 : 선택할 링크 마우스 왼쪽 클릭</li>
+        <li>링크 수정 : 링크 선택 후 아래 편집창에서 수정</li>
+        <li>링크 방향 변환 : 링크 선택후 C 키 입력</li>
+        <li>다수 노드 선택 : ctrl+노드 선택</li>
+        <li>다수 노드 및 링크 선택 : ctrl+ 마우스 드래그</li>
+        <li>다수 링크 추가 : 다수 소스 노드 선택 후 타겟 노드 선택</li>
+        <li>저장 및 취소 : 프로젝트 자료 수정 결과 저장 또는 취소 가능</li>
+      </ul>
     </div>
   </br></br>
      <div id="saveelect" class="btn-group">
