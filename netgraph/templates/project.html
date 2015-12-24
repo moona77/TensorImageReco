@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% load static %}
+
+{% block breadcrumbs %}
+<li><a href=/projects/{{ project.slug }}>{{ project }}</a></li>
+
+{% endblock %}
+
+{% block content %}
+<script src="{% static 'js/jquery-1.11.3.js' %}" type="text/javascript"></script>
+ 
+<ul class="nav nav-pills">
+  <li class="active"><a href="#overview" data-toggle="tab">Overview</a></li>
+  <li><a href="#graph" data-toggle="tab">Graph</a></li>
+  <li><a href="#history" data-toggle="tab">{% trans "History" %}</a></li>
+  
+
+  <li class="dropdown">
+  <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+      Analyzer <span class="caret"></span>
+  </a>
+  
+  <ul class="dropdown-menu">
+      <li><a href="{% url 'analyzer_centrality' project=project.slug  %}">Centrality</a></li>
+      <li><a href="#brokerage">Brokerage</a></li>      
+    </ul>
+  </li>
+
+
+
+</ul>
+
+<div class="tab-content">
+<div class="tab-pane active" id="overview">
+<div class="container-fluid">
+
+<div class="row">
+
+<div class="col-lg-6">
+
+
+
+
+<script>
+$(function(){
+  $("#checkallnode").click(function () {
+    var chk =$(this).is(":checked");
+    if(chk) $("input:checkbox[id='checknode']").prop('checked', true);
+    else $("input:checkbox[id='checknode']").prop('checked', false);
+  });
+});
+
+ 
+$(function(){
+  $("#checkalllink").click(function () {
+    var chk =$(this).is(":checked");
+    if(chk) $("input:checkbox[id='checklink']").prop('checked', true);
+    else $("input:checkbox[id='checklink']").prop('checked', false);
+  });
+});
+ 
+
+</script>
+
+<form action = "{% url 'delete_node' project %}" method="post">
+{% csrf_token %}
+<div class="panel panel-primary">
+  <div class="panel-heading"><h4 class="panel-title"> Nodeset Infromation 
+  <input type="submit" id= "deleteall" value ="delete"></input></h4> </div>
+
+  <div class="panel-body">
+
+<table class="sort table" >
+<thead>
+<tr>
+
+<td><input type = "checkbox" name="checkallnode" id ="checkallnode"></input></td>
+<th>No.</th>
+<th>Name</th>
+<th>Group</th>
+ 
+ 
+
+</tr>
+<tbody>
+
+
+
+{% for node in project.nodeset_set.all %}
+
+<tr>
+<td><input type = "checkbox" name = "checknode{{ node.idnumber }}" id ="checknode" value ="{{ node.idnumber }}"></input></td>
+<th><a href="">{{ forloop.counter }}</a></th>
+<th>{{ node.name }}</a></th>
+<td>{{ node.group }}</td>
+
+</tr>
+
+{% endfor %}
+</form>
+</tbody>
+</table>
+
+</div>
+</div>
+
+
+</div>
+
+<div class="col-lg-6">
+
+<form action = "{% url 'delete_link' project %}" method="post">
+{% csrf_token %}
+<div class="panel panel-primary">
+  <div class="panel-heading"><h4 class="panel-title">{% trans "Network Information" %} <input type="submit" id= "deletealllink" value ="delete all"></input></h4></div>
+  <div class="panel-body">
+
+<table class="table">
+  <tr>
+    <th><input type = "checkbox" name="checkalllink" id ="checkalllink"></input></th>
+    <th>No.</th>
+    <th>Source</th>
+    <th>Target</th>
+    <th>Weight</th>
+   
+  </tr>
+
+  {% for link in project.network_set.all %}
+  <tr>    
+    <th><input type = "checkbox" name ="checklink{{ link.pk }}" id = "checklink" value ="{{ link.pk }}"></input></th>
+    <td>{{ forloop.counter }}</td>
+    <td>{{ link.source }}</td>
+    <td>{{ link.target }}</td>
+    <td>{{ link.weight }}</td>
+    
+  </tr>
+  {% endfor %}
+</form>
+
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+ 
+<div class="tab-pane" id="graph">
+{% include "graphedit.html" %} 
+</div>
+
+<div class="tab-pane" id="history">
+ 
+</div>
+  
+
+
+{% endblock %}

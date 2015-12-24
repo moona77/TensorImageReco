@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block breadcrumbs %}
+<li><a href="{{ object.get_absolute_url }}">{{ object }}</a></li>
+<li><a href="{% url 'analyzer_centrality' project=object.slug %}">Centrality</a></li>
+{% endblock %}
+
+
+{% block content %}
+    {% if nodeset %}
+    <ul>
+
+        {% for node in nodeset %}
+        <li><a href="">
+
+
+
+            node : {{ node.name }},
+            in-degree: {{ node.indegree_centrality }}, out-degree: {{ node.outdegree_centrality }},
+            in-closeness : {{ node.incloseness_centrality }}, out-closeness : {{ node.outcloseness_centrality }}
+
+
+
+        </a></li>
+        {% endfor %}
+    </ul>
+    {% else %}
+        <p>No polls are available</p>
+    {% endif %}
+
+
+
+{% endblock %}
+
+
