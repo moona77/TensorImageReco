@@ -124,8 +124,8 @@ class Network(models.Model):
         null=False
     )
 
-    weight = models.FloatField(
-
+    weight = models.CharField(
+        max_length=20,
     )
 
 

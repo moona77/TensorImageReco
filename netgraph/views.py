@@ -232,7 +232,7 @@ def newproject(request):
     path = '/home/moon/.virtualenvs/myproject/data/'
 
     dataset = [row for row in csv.reader(f.read().splitlines())] # csv file parsing
-    handle_uploaded_file(f, path)  #file save
+    #handle_uploaded_file(f, path)  #file save
 
 
 
@@ -261,7 +261,7 @@ def newproject(request):
     for link in dataset:
         obj.network_set.update_or_create(source = link[0], sourceID = nodedict[link[0]],
                                target = link[1], targetID = nodedict[link[1]],
-                               weight= float(link[2]))
+                               weight= link[2])
 
 
 
