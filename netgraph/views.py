@@ -36,7 +36,7 @@ def dashboard(request):
 
     return render(
         request,
-        'index.html',
+        'dashboard.html',
         {
             'projects': projects,
         }
@@ -229,11 +229,7 @@ def newproject(request):
 
     project = request.POST['projectname']
 
-    path = '/home/moon/.virtualenvs/myproject/data/'
-
     dataset = [row for row in csv.reader(f.read().splitlines())] # csv file parsing
-    #handle_uploaded_file(f, path)  #file save
-
 
 
     Project.objects.update_or_create(name = project, slug =project)
@@ -274,7 +270,7 @@ def newproject(request):
         G.add_node(node.idnumber, name = node.name)
 
     for link in links:
-        G.add_edge(link.sourceID, link.targetID, weight = link.weight)
+        G.add_edge(link.sourceID, link.targetID, weight = float(link.weight))
 
 
     pos = nx.spring_layout(G)
@@ -337,25 +333,6 @@ def newblank(request):
     return redirect(url)
 
 
-
-
-
-
-
-
-
-
-
-
-def handle_uploaded_file(f, path):
-  if not os.path.exists(path):
-    os.mkdir(path)
-  fn = path + 'temp.csv'
-  with open(fn, 'wb+') as destination:
-    for chunk in f.chunks():
-        destination.write(chunk)
-
-
 def analyzer_centrality(request, project):
     projects = Project.objects.all()
     obj = get_project(request, project)
@@ -372,19 +349,33 @@ def analyzer_centrality(request, project):
 
     indeg_centrality = nx.in_degree_centrality(G)
     outdeg_centrality = nx.out_degree_centrality(G)
+    deg_centrality = nx.degree_centrality(G)
+    closeness_centrality = nx.closeness_centrality(G)
+    betweenness_centrality = nx.betweenness_centrality(G)
 
     for key, value in indeg_centrality.items():
         p = obj.nodeset_set.filter(idnumber = key)
-        p.update(indegree_centrality = value)
+        p.update(indegree_centrality = round(value,3))
 
     for key, value in outdeg_centrality.items():
         p = obj.nodeset_set.filter(idnumber = key)
-        p.update(outdegree_centrality = value)
+        p.update(outdegree_centrality = round(value,3))
 
+    for key, value in deg_centrality.items():
+        p = obj.nodeset_set.filter(idnumber = key)
+        p.update(degree_centrality = round(value,3))
+
+    for key, value in closeness_centrality.items():
+        p = obj.nodeset_set.filter(idnumber = key)
+        p.update(closeness_centrality = round(value,3))
+
+    for key, value in betweenness_centrality.items():
+        p = obj.nodeset_set.filter(idnumber = key)
+        p.update(betweenness_centrality = round(value,3))
 
     nodeset = obj.nodeset_set.all()
     context = {'nodeset' : nodeset,
                'object': obj,
-                'project': obj,
+               'projects': projects,
                }
     return render(request, 'centrality.html', context)

@@ -65,19 +65,11 @@ class Nodeset(models.Model):
         default = 0
     )
 
-    sumdegree_centrality = models.FloatField(
+    degree_centrality = models.FloatField(
         default = 0
     )
 
-    incloseness_centrality = models.FloatField(
-        default = 0
-    )
-
-    outcloseness_centrality = models.FloatField(
-        default = 0
-    )
-
-    sumcloseness_centrality = models.FloatField(
+    closeness_centrality = models.FloatField(
         default = 0
     )
 

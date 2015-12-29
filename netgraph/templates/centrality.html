@@ -8,25 +8,25 @@
 
 
 {% block content %}
-    {% if nodeset %}
-    <ul>
-
+    {% if nodeset %}    
+    <table class="sort table">
+        <tr><td>Node label</td><th>in-degree</th><th>out-degree</th><th>degree</th><th>closeness</th><th>betweenness</th></tr>
         {% for node in nodeset %}
-        <li><a href="">
+        <tr>
 
-
-
-            node : {{ node.name }},
-            in-degree: {{ node.indegree_centrality }}, out-degree: {{ node.outdegree_centrality }},
-            in-closeness : {{ node.incloseness_centrality }}, out-closeness : {{ node.outcloseness_centrality }}
-
-
-
-        </a></li>
+        <tbody>
+        <td> {{ node.name }}</td>
+        <th> {{ node.indegree_centrality }} </th>
+        <th> {{ node.outdegree_centrality }}</th>
+        <th> {{ node.degree_centrality }}</th>
+        <th> {{ node.closeness_centrality }} </th>
+        <th> {{ node.betweenness_centrality }} </th>
+        </tbody>    
+        </tr>
         {% endfor %}
-    </ul>
+    </table>
     {% else %}
-        <p>No polls are available</p>
+        <p>No Centralities are available</p>
     {% endif %}
 
 
