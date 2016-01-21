@@ -1,5 +1,11 @@
+#-*- coding: utf-8 -*-
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Project, Nodeset, Network
+from django.contrib import messages
+from .models import Nodeset, Network, NewsData, Links
+from .form import SearchForm
+from django.db.models import Q
+from datetime import date, timedelta
+from dateutil.relativedelta import relativedelta
 
 import os, sys, csv, json
 import networkx as nx
@@ -11,71 +17,106 @@ def home(request):
     and user links if logged in.
     """
 
-    projects = Project.objects.all()
+
 
 
     return render(
         request,
-        'index.html',
-        {
-             'projects': projects,
-        }
+        'index.html'
     )
 
 
 
 
-def dashboard(request):
+def poweranalysis(request):
     """
     Home page of Weblate showing list of projects, stats
     and user links if logged in.
     """
+    if request.method == 'POST':
+        search_form = SearchForm(request.POST)
+        if search_form.is_valid():
+            context = {
+                'search_form': search_form,
+            }
+            context['search_query'] = search_form.cleaned_data['q']
+            context['period'] =  search_form.cleaned_data['period']
+            context['network'] = Links.objects.filter(node1=search_form.cleaned_data['q']) | Links.objects.filter(node2=search_form.cleaned_data['q'])
+            if search_form.cleaned_data['every']:
+                context['network'] = Links.objects.filter(node1=search_form.cleaned_data['q']) | Links.objects.filter(node2=search_form.cleaned_data['q'])
+            else:
+                if search_form.cleaned_data['pol']:
+                    context['network'] = Links.objects.filter(Q(node1=context['search_query']), Q(node2attr="Politics")) | Links.objects.filter(Q(node2=context['search_query']), Q(node1attr="Politics"))
+                if search_form.cleaned_data['pub']:
+                    context['network'] = Links.objects.filter(Q(node1=context['search_query']), Q(node2attr="Public Office")) | Links.objects.filter(Q(node2=context['search_query']), Q(node1attr="Public Office"))
+                if search_form.cleaned_data['ent']:
+                    context['network'] = Links.objects.filter(Q(node1=context['search_query']), Q(node2attr="Enterprise")) | Links.objects.filter(Q(node2=context['search_query']), Q(node1attr="Enterprise"))
+                if search_form.cleaned_data['univ']:
+                    context['network'] = Links.objects.filter(Q(node1=context['search_query']), Q(node2attr="Univ/Professor")) | Links.objects.filter(Q(node2=context['search_query']), Q(node1attr="Univ/Professor"))
 
-    projects = Project.objects.all()
+            if context['period'] == '1w':
+                end_date = date.today()
+                start_date = end_date - timedelta(days=7)
+            elif context['period'] == '1m':
+                end_date = date.today()
+                start_date = end_date - relativedelta(months=1)
+            elif context['period'] == '3m':
+                end_date = date.today()
+                start_date = end_date - relativedelta(months=3)
 
+            newsall = NewsData.objects.filter(Date__range=(start_date,end_date))
+            temc = 0
+            for news in newsall:
+                if temc==0:
+                    temc = news.links_set.all()
+                else:
+                    temc = temc|news.links_set.all()
+            context['network'] = context['network'] & temc
+
+            return render(
+                request,
+                'poweranalysis.html',
+                context
+            )
+
+    else:
+        search_form = SearchForm()
+        context = {
+            'search_form': search_form,
+        } 
+        return render(
+            request,
+            'poweranalysis.html', 
+            context
+        )
+ 
+
+   
+
+
+
+def search(request):
+    """
+    Performs site-wide search on units.
+    """
+    search_form = SearchForm()
+    context = {
+        'search_form': search_form,
+    }
+
+    if search_form.is_valid():
+        context['title'] = search_form.cleaned_data['q']
+        context['query_string'] = search_form.urlencode()
+        context['search_query'] = search_form.cleaned_data['q']
+    else:
+        messages.error(request, 'Invalid search query!')
 
     return render(
         request,
-        'dashboard.html',
-        {
-            'projects': projects,
-        }
+        'poweranalysis.html',
+        context
     )
-
-
-
-def get_project(request, project):
-    '''
-    Returns project matching parameters.
-    '''
-    project = get_object_or_404(
-        Project,
-        slug = project,
-    )
-
-    return project
-
-
-def show_project(request, project):
-
-    project = get_project(request, project)
-    projects = Project.objects.all()
-    #print Nodeset.objects.all()
-
-
-    return render(
-        request,
-        'project.html',
-        {
-            'project': project,
-            'projects': projects,
-
-        }
-    )
-
-def show_newproject(request):
-    projects = Project.objects.all()
-    return render(request, "newproject.html", {'projects': projects,})
+    
 
 
 
@@ -166,171 +207,6 @@ def graphedit(request, project):
     return redirect(url)
 
 
-
-def delete_node(request, project):
-    obj = get_project(request, project)
-
-    if request.method == 'POST':
-        keys = request.POST.keys()
-        try:
-            keys.remove(u'csrfmiddlewaretoken')
-            keys.remove(u'checkallnode')
-        except:
-            pass
-        print keys
-
-        for key in keys:
-            print key
-            u = request.POST[key]
-            obj.nodeset_set.filter(idnumber = int(u)).delete()
-            obj.network_set.filter(sourceID = int(u)).delete()
-            obj.network_set.filter(targetID = int(u)).delete()
-
-
-
-
-    url = '/projects/'+project+'/'
-    return redirect(url)
-
-def delete_link(request, project):
-    obj = get_project(request, project)
-
-    if request.method == 'POST':
-        keys = request.POST.keys()
-        try:
-            keys.remove(u'csrfmiddlewaretoken')
-            keys.remove(u'checkalllink')
-        except:
-            pass
-        print keys
-
-        for key in keys:
-            print key
-            u = request.POST[key]
-            obj.network_set.filter(pk = int(u)).delete()
-
-
-
-
-
-    url = '/projects/'+project+'/'
-    return redirect(url)
-
-
-def newproject(request):
-
-
-
-  if request.method == 'POST':
-
-
-    f = request.FILES['upload_file']
-
-
-    project = request.POST['projectname']
-
-    dataset = [row for row in csv.reader(f.read().splitlines())] # csv file parsing
-
-
-    Project.objects.update_or_create(name = project, slug =project)
-    obj = get_project(request, project)
-
-
-
-    nodes =[]
-    for data in dataset:
-        nodes.append(data[0])
-        nodes.append(data[1])
-    nodeset = list(set(nodes))
-
-
-
-    nodedict = {}
-
-    for i, node in enumerate(nodeset):
-        obj.nodeset_set.update_or_create(name = node, idnumber = i, group = "0")
-        nodedict[node] = i
-
-
-
-    #obj.network_set.all().delete()
-    for link in dataset:
-        obj.network_set.update_or_create(source = link[0], sourceID = nodedict[link[0]],
-                               target = link[1], targetID = nodedict[link[1]],
-                               weight= link[2])
-
-
-
-    G = nx.Graph()
-    nodes = obj.nodeset_set.all()
-    links = obj.network_set.all()
-
-
-    for node in nodes:
-        G.add_node(node.idnumber, name = node.name)
-
-    for link in links:
-        G.add_edge(link.sourceID, link.targetID, weight = float(link.weight))
-
-
-    pos = nx.spring_layout(G)
-
-    for key, value in pos.items():
-        obj.nodeset_set.filter(idnumber = key).update(springx = value[0], springy=value[1])
-
-
-
-    """
-    for i, path in enumerate(filepath_nodeset):
-        try:
-            nodes = dataset.create_nodeset(nodesetname[i])
-        except:
-            nodes = dataset.get_nodeset(nodesetname[i])
-        data = pd.read_csv(path)
-        attlist = data.columns.values
-        nodesetImport = NodesetImportFormat(',')
-
-        nodesetImport.set_id(1)
-        column_num=1
-        print attlist
-        for att in attlist:
-            if data[att].dtypes =='object':
-                nodesetImport.set_string(column_num, str(att))
-                print column_num, ", string, ", att
-            if data[att].dtypes== 'int64':
-                nodesetImport.set_int(column_num, str(att))
-                print column_num, ", int, ", att
-            if data[att].dtypes== 'float64':
-                nodesetImport.set_double(column_num, str(att))
-                print column_num, ", double, ", att
-            column_num += 1
-
-        #print nodesetImport
-        nodesetImport.set_skip_rows(1)
-        nodes.run_import(path, nodesetImport)
-
-    """
-
-
-  url = '/projects/'+project+'/'
-  return redirect(url)
-
-
-def newblank(request):
-
-    project = request.POST['projectname']
-    print project
-
-    if request.method == 'POST':
-
-        project = request.POST['projectname']
-
-        Project.objects.update_or_create(name = project, slug =project)
-
-
-
-        url = '/projects/'+project+'/'
-    return redirect(url)
 
 
 def analyzer_centrality(request, project):

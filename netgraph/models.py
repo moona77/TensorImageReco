@@ -1,30 +1,6 @@
+#-*- coding: utf-8 -*-
 from django.db import models
 from django.utils.translation import ugettext as _, ugettext_lazy
-
-
-class Project(models.Model):
-    name = models.CharField(
-        verbose_name=ugettext_lazy('Project name'),
-        max_length=100,
-        unique=True,
-        help_text=ugettext_lazy('Name to display')
-    )
-
-    slug = models.SlugField(
-        verbose_name=ugettext_lazy('URL slug'),
-        db_index=True, unique=True,
-        max_length=100,
-        help_text=ugettext_lazy('Name used in URLs and file names.')
-    )
-
-    class Meta(object):
-        ordering = ['name']
-        verbose_name = ugettext_lazy('Project')
-        verbose_name_plural = ugettext_lazy('Projects')
-
-    def __unicode__(self):
-        return _(self.name)
-
 
 
 class Nodeset(models.Model):
@@ -34,26 +10,15 @@ class Nodeset(models.Model):
         help_text=ugettext_lazy('Name to display')
     )
 
-    idnumber = models.IntegerField(
-        default= 0,
-        null = False
-    )
-
     group = models.CharField(
         max_length = 20,
         verbose_name=ugettext_lazy('Group name'),
     )
 
-    desc = models.CharField(
-        verbose_name=ugettext_lazy('descrpition'),
-        max_length=200,
-        help_text=ugettext_lazy('Desc to display')
-    )
-
-    springx =models.FloatField(
+    x =models.FloatField(
         default=0
     )
-    springy =models.FloatField(
+    y =models.FloatField(
         default=0
     )
 
@@ -62,10 +27,6 @@ class Nodeset(models.Model):
     )
 
     outdegree_centrality = models.FloatField(
-        default = 0
-    )
-
-    degree_centrality = models.FloatField(
         default = 0
     )
 
@@ -78,13 +39,8 @@ class Nodeset(models.Model):
     )
 
 
-    project = models.ForeignKey(
-        Project,
-        verbose_name=ugettext_lazy('Project'),
-    )
-
     class Meta(object):
-        ordering = ['idnumber']
+        ordering = ['pk']
         verbose_name = ugettext_lazy('Nodeset')
         verbose_name_plural = ugettext_lazy('Nodesets')
 
@@ -96,7 +52,7 @@ class Nodeset(models.Model):
 
 class Network(models.Model):
     source = models.CharField(
-        max_length=20,
+        max_length=100,
         #verbose_name=ugettext_lazy('source name'),
     )
 
@@ -106,8 +62,7 @@ class Network(models.Model):
     )
 
     target = models.CharField(
-    	'Nodeset',
-        max_length=20,
+        max_length=100,
         #verbose_name=ugettext_lazy('target name')
     )
 
@@ -121,10 +76,7 @@ class Network(models.Model):
     )
 
 
-    project = models.ForeignKey(
-        'Project',
-        verbose_name=ugettext_lazy('Project'),
-    )
+    #News = models.ManyToManyField(NewsData)
 
     class Meta(object):
         ordering = ['sourceID']
@@ -133,4 +85,73 @@ class Network(models.Model):
 
     def __unicode__(self):
         return _(self.source+"->"+self.target)
+
+
+class NewsData(models.Model):
+    Title = models.CharField(
+        max_length=200,
+        #verbose_name=ugettext_lazy('source name'),
+    )
+
+    Date = models.DateTimeField(
+
+    )
+
+    Url = models.URLField(
+        verbose_name=ugettext_lazy('URL'),
+        db_index=True, unique=True,
+        max_length=200,
+        #verbose_name=ugettext_lazy('target name')
+    )
+
+    Article = models.TextField(
+    )
+
+
+    class Meta(object):
+        ordering = ('Title',)
+        verbose_name = ugettext_lazy('New')
+
+    def __unicode__(self):
+        return _(self.Title)
+
+
+class Links(models.Model):
+    node1 = models.CharField(
+        max_length=100,
+        #verbose_name=ugettext_lazy('source name'),
+    )
+
+    node1attr = models.CharField(
+        max_length=100,
+        #verbose_name=ugettext_lazy('source name'),
+    )
+
+
+    node2 = models.CharField(
+        max_length=100,
+        #verbose_name=ugettext_lazy('target name')
+    )
+
+    node2attr = models.CharField(
+        max_length=100,
+        #verbose_name=ugettext_lazy('source name'),
+    )
+
+    NewsData = models.ForeignKey(NewsData)
+
+
+    #News = models.ManyToManyField(NewsData)
+
+    class Meta(object):
+        ordering = ['node1']
+        verbose_name = ugettext_lazy('Link')
+
+
+    def __unicode__(self):
+        return _(self.node1+"-"+self.node2)
+
+
+
+
 

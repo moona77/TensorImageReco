@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block breadcrumbs %}
+Search
+{% endblock %}
+
+{% block content %}
+{% include "search-form.html" %}
+{% if network %}
+	<table class="sort table">
+        <tr><td>Node1 label</td><th>Attribute</th><th>Node2 label</th><th>Attribute</th><th>Date</th></tr>
+        {% for link in network %}
+        <tr>
+        <tbody>
+        <td> {{ link.node1 }}</td>
+        <th> {{ link.node1attr }} </th>
+        <th> {{ link.node2 }}</th>
+        <th> {{ link.node2attr }}</th>
+        <th> {{ link.NewsData.Date }} </th>
+        
+        </tbody>    
+        </tr>
+        {% endfor %}
+    </table>
+{% else %}
+        <p>No {{ search_query }} exist</p>
+{% endif %}
+
+
+{% endblock %}
+
+
+
+
