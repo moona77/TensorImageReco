@@ -62,7 +62,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'Webminer', #os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': 'netpowermap', #os.path.join(BASE_DIR, 'db.sqlite3'),
         'USER': 'root',
         'PASSWORD': '1234',
         'HOST':'localhost',

@@ -17,6 +17,12 @@ urlpatterns = [
         name='poweranalysis',
     ),
 
+    url(
+        r'^poweranalysis/(?P<pk>[0-9]+)/$',
+        views.weight,
+        name='weight',
+    ),
+
 
     url(
         r'^analyzer/' + PROJECT + 'centrality$',

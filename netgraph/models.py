@@ -49,37 +49,38 @@ class Nodeset(models.Model):
 
 
 
-
 class Network(models.Model):
     source = models.CharField(
         max_length=100,
         #verbose_name=ugettext_lazy('source name'),
     )
 
-    sourceID = models.IntegerField(
-        default=0,
-        null=False
+    sourceid = models.IntegerField(
+        default=0
+        #max_length=100,
+        #verbose_name=ugettext_lazy('source name'),
     )
 
     target = models.CharField(
         max_length=100,
+        #verbose_name=ugettext_lazy('source name'),
+    )
+
+
+    targetid = models.IntegerField(
+        default=0
+        #max_length=100,
         #verbose_name=ugettext_lazy('target name')
     )
 
-    targetID = models.IntegerField(
-        default=0,
-        null=False
+    weight = models.IntegerField(
+        default= 1
     )
-
-    weight = models.CharField(
-        max_length=20,
-    )
-
 
     #News = models.ManyToManyField(NewsData)
 
     class Meta(object):
-        ordering = ['sourceID']
+        ordering = ['pk']
         verbose_name = ugettext_lazy('Network')
         verbose_name_plural = ugettext_lazy('Networks')
 
@@ -116,42 +117,54 @@ class NewsData(models.Model):
         return _(self.Title)
 
 
-class Links(models.Model):
-    node1 = models.CharField(
+class Keyword(models.Model):
+    node = models.CharField(
         max_length=100,
         #verbose_name=ugettext_lazy('source name'),
     )
 
-    node1attr = models.CharField(
-        max_length=100,
-        #verbose_name=ugettext_lazy('source name'),
-    )
-
-
-    node2 = models.CharField(
-        max_length=100,
-        #verbose_name=ugettext_lazy('target name')
-    )
-
-    node2attr = models.CharField(
-        max_length=100,
-        #verbose_name=ugettext_lazy('source name'),
+    nodeattr = models.ForeignKey(
+        Nodeset
     )
 
     NewsData = models.ForeignKey(NewsData)
 
 
-    #News = models.ManyToManyField(NewsData)
-
     class Meta(object):
-        ordering = ['node1']
-        verbose_name = ugettext_lazy('Link')
+        ordering = ['nodeattr__pk']
+        verbose_name = ugettext_lazy('keyword')
 
 
     def __unicode__(self):
-        return _(self.node1+"-"+self.node2)
+        return _(self.node)
 
 
+class Links(models.Model):
+    node1 = models.IntegerField(
+        #max_length=100,
+        #verbose_name=ugettext_lazy('source name'),
+    )
 
+    node2 = models.IntegerField(
+        #max_length=100,
+        #verbose_name=ugettext_lazy('source name'),
+    )
+
+    link = models.ForeignKey(
+        Network
+    )
+
+    news = models.ForeignKey(
+        NewsData
+    )
+
+
+    class Meta(object):
+
+        verbose_name = ugettext_lazy('links')
+
+
+    def __unicode__(self):
+        return _(self.node1 + "--"+self.node2)
 
 

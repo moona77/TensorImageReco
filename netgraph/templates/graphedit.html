@@ -208,7 +208,7 @@ var nodeHash = {};
 lastNodeId = 0;
 newLinkId = 0;
 
-{% for node in project.nodeset_set.all %}
+{% for node in nodeset %}
   var newNodesobj = {id: {{ node.idnumber }}, label: "{{ node.name }}", group: {{ node.group }}, reflexive: false };
   nodes.push(newNodesobj);
   nodeHash[String(nodes[{{ forloop.counter0 }}].id)] = {{ forloop.counter0 }};
@@ -217,7 +217,7 @@ newLinkId = 0;
 {% endfor %}
 
 
-{% for link in project.network_set.all %}
+{% for link in network %}
    var newLinkObj = {id: {{ link.pk }}, source: nodes[nodeHash[{{ link.sourceID }}]], sourceid: {{ link.sourceID }}, targetid: {{ link.targetID }}, target: nodes[nodeHash[{{ link.targetID }}]], weight: {{ link.weight }}, left: false, right: true };
    links.push(newLinkObj);
    newLinkId = Math.max(newLinkId, {{ link.pk }});

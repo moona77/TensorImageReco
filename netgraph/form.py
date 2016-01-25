@@ -7,7 +7,7 @@ class SearchForm(forms.Form):
     # pylint: disable=C0103
     q = forms.CharField(
         label='Query',
-        min_length=2,
+        min_length=1,
         required=False,
     )
     period = forms.ChoiceField(
@@ -28,7 +28,7 @@ class SearchForm(forms.Form):
     pol = forms.BooleanField(
         label='Politic',
         required=False,
-        initial=True
+        initial=False
     )
     pub = forms.BooleanField(
         label='Public Office',

@@ -9,22 +9,55 @@ Search
 {% include "search-form.html" %}
 {% if network %}
 	<table class="sort table">
-        <tr><td>Node1 label</td><th>Attribute</th><th>Node2 label</th><th>Attribute</th><th>Date</th></tr>
+        <tr><th>Node1 label</th><th>Node2 label</th><th>Weight</th></tr>
         {% for link in network %}
         <tr>
         <tbody>
-        <td> {{ link.node1 }}</td>
-        <th> {{ link.node1attr }} </th>
-        <th> {{ link.node2 }}</th>
-        <th> {{ link.node2attr }}</th>
-        <th> {{ link.NewsData.Date }} </th>
+        <td> {{ link.source }}</td>
+        <td> {{ link.target }} </td>
+        <td> <a href="{% url 'weight' pk=link.pk%}">{{ link.weight }} </a></td>
         
         </tbody>    
         </tr>
         {% endfor %}
     </table>
-{% else %}
-        <p>No {{ search_query }} exist</p>
+{% include "graph.html" %}
+{% endif %}
+{% if nodeset %}
+        <table class="sort table">
+        <tr><th>label</th><th>group</th><th>pos x</th><th>pos y</th></tr>
+        {% for node in nodeset %}
+        <tr>
+        <tbody>
+        <td> {{ node.name }}</td>
+        <td> {{ node.group }} </td>
+        <td>  {{ node.x }} </td>
+        <td>  {{ node.y }} </td>
+
+        </tbody>
+        </tr>
+        {% endfor %}
+    </table>
+
+
+
+{% endif %}
+
+{% if links %}
+        <table class="sort table">
+        <tr><th>title</th><th>date</th><th>url</th></tr>
+        {% for link in links %}
+        <tr>
+        <tbody>
+        <td> {{ link.news.Title }}</td>
+        <td> {{ link.news.Date }} </td>
+        <td> {{ link.news.Url }} </td>
+
+        </tbody>
+        </tr>
+        {% endfor %}
+    </table>
+
 {% endif %}
 
 

@@ -1,7 +1,7 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-from .models import Nodeset, Network, NewsData, Links
+from .models import Nodeset, Network, NewsData, Keyword, Links
 from .form import SearchForm
 from django.db.models import Q
 from datetime import date, timedelta
@@ -17,85 +17,116 @@ def home(request):
     and user links if logged in.
     """
 
-
-
-
     return render(
-        request,
-        'index.html'
+            request,
+            'index.html'
     )
 
 
-
-
 def poweranalysis(request):
-    """
-    Home page of Weblate showing list of projects, stats
-    and user links if logged in.
-    """
+
     if request.method == 'POST':
         search_form = SearchForm(request.POST)
         if search_form.is_valid():
-            context = {
-                'search_form': search_form,
-            }
-            context['search_query'] = search_form.cleaned_data['q']
-            context['period'] =  search_form.cleaned_data['period']
-            context['network'] = Links.objects.filter(node1=search_form.cleaned_data['q']) | Links.objects.filter(node2=search_form.cleaned_data['q'])
-            if search_form.cleaned_data['every']:
-                context['network'] = Links.objects.filter(node1=search_form.cleaned_data['q']) | Links.objects.filter(node2=search_form.cleaned_data['q'])
-            else:
-                if search_form.cleaned_data['pol']:
-                    context['network'] = Links.objects.filter(Q(node1=context['search_query']), Q(node2attr="Politics")) | Links.objects.filter(Q(node2=context['search_query']), Q(node1attr="Politics"))
-                if search_form.cleaned_data['pub']:
-                    context['network'] = Links.objects.filter(Q(node1=context['search_query']), Q(node2attr="Public Office")) | Links.objects.filter(Q(node2=context['search_query']), Q(node1attr="Public Office"))
-                if search_form.cleaned_data['ent']:
-                    context['network'] = Links.objects.filter(Q(node1=context['search_query']), Q(node2attr="Enterprise")) | Links.objects.filter(Q(node2=context['search_query']), Q(node1attr="Enterprise"))
-                if search_form.cleaned_data['univ']:
-                    context['network'] = Links.objects.filter(Q(node1=context['search_query']), Q(node2attr="Univ/Professor")) | Links.objects.filter(Q(node2=context['search_query']), Q(node1attr="Univ/Professor"))
+            context = {'search_form': search_form, 'search_query': search_form.cleaned_data['q'],
+                       'period': search_form.cleaned_data['period'],
+                       'network': Keyword.objects.filter(node=search_form.cleaned_data['q'])}
 
+            end_date = date.today()+relativedelta(days=1)
             if context['period'] == '1w':
-                end_date = date.today()
-                start_date = end_date - timedelta(days=7)
+                start_date = end_date - relativedelta(days=7)
             elif context['period'] == '1m':
-                end_date = date.today()
                 start_date = end_date - relativedelta(months=1)
             elif context['period'] == '3m':
-                end_date = date.today()
                 start_date = end_date - relativedelta(months=3)
 
-            newsall = NewsData.objects.filter(Date__range=(start_date,end_date))
-            temc = 0
-            for news in newsall:
-                if temc==0:
-                    temc = news.links_set.all()
-                else:
-                    temc = temc|news.links_set.all()
-            context['network'] = context['network'] & temc
+            newsall = NewsData.objects.filter(Date__range=(start_date, end_date))
 
+            Network.objects.all().delete()
+            Links.objects.all().delete()
+            temp = set()
+            for news in newsall:
+                key = news.keyword_set.filter(node=context["search_query"])
+                if key.count()>0:
+                    #조건제한이 없을때
+                    if search_form.cleaned_data['every']:
+
+                        key_all = news.keyword_set.all()
+                        for key1 in key_all:
+
+                            temp.add(key1.nodeattr)
+
+                            for key2 in key_all:
+                                if(key1.nodeattr.pk<key2.nodeattr.pk):
+                                    obj, created = Network.objects.get_or_create(source = key1.node, sourceid = key1.nodeattr.pk, target = key2.node, targetid = key2.nodeattr.pk, weight =1)
+                                    if not created:
+                                        Network.objects.filter(pk=obj.pk).update(weight =obj.weight+1)
+
+                                    Links.objects.create(node1 = key1.nodeattr.pk, node2 = key2.nodeattr.pk, link= obj, news= news)
+
+                    #조건 제한이 있을 경우
+                    else:
+                        if search_form.cleaned_data['pol']:
+                            group = "Politics"
+                        if search_form.cleaned_data['pub']:
+                            group = "Public Office"
+                        if search_form.cleaned_data['ent']:
+                            group = "Enterprise"
+                        if search_form.cleaned_data['univ']:
+                            group = "Univ/Professor"
+
+                        key_all = news.keyword_set.filter(node=context["search_query"])|news.keyword_set.filter(nodeattr__group=group)
+                        for key1 in key_all:
+                            temp.add(key1.nodeattr)
+                            for key2 in key_all:
+                                if(key1.nodeattr.pk<key2.nodeattr.pk):
+                                    obj, created = Network.objects.get_or_create(source = key1.node, sourceid = key1.nodeattr.pk, target = key2.node, targetid = key2.nodeattr.pk, weight =1)
+                                    if not created:
+                                        Network.objects.filter(pk=obj.pk).update(weight =obj.weight+1)
+
+                                    Links.objects.create(node1 = key1.nodeattr.pk, node2 = key2.nodeattr.pk, link= obj, news= news)
+
+            temp = list(temp)
+            context['network'] = Network.objects.all()
+
+            G = nx.Graph()
+            nodes = temp
+            links = context['network']
+            for node in nodes:
+                G.add_node(node.pk, name = node.name)
+
+            for link in links:
+                G.add_edge(link.sourceid, link.targetid, weight = link.weight)
+
+            indeg_centrality = nx.betweenness_centrality(G)
+            pos = nx.spring_layout(G)
+
+            for node in temp:
+                print node.name,pos[node.pk][0],pos[node.pk][1]
+                node.x =pos[node.pk][0]
+                node.y =pos[node.pk][1]
+
+            context['nodeset'] = temp
+            #print temp
             return render(
-                request,
-                'poweranalysis.html',
-                context
+                    request,
+                    'poweranalysis.html',
+                    context
             )
 
     else:
         search_form = SearchForm()
         context = {
             'search_form': search_form,
-        } 
+        }
         return render(
-            request,
-            'poweranalysis.html', 
-            context
+                request,
+                'poweranalysis.html',
+                context
         )
- 
-
-   
 
 
-
-def search(request):
+def weight(request, pk):
     """
     Performs site-wide search on units.
     """
@@ -104,31 +135,21 @@ def search(request):
         'search_form': search_form,
     }
 
-    if search_form.is_valid():
-        context['title'] = search_form.cleaned_data['q']
-        context['query_string'] = search_form.urlencode()
-        context['search_query'] = search_form.cleaned_data['q']
-    else:
-        messages.error(request, 'Invalid search query!')
+    context['links'] = Network.objects.get(pk=pk).links_set.all()
+
 
     return render(
-        request,
-        'poweranalysis.html',
-        context
+            request,
+            'poweranalysis.html',
+            context
     )
-    
-
-
-
 
 
 def graphedit(request, project):
     obj = get_project(request, project)
 
-
     if request.method == 'POST':
         keys = request.POST.keys()
-
 
         newnodes = {}
         newlinks = {}
@@ -140,7 +161,7 @@ def graphedit(request, project):
                 nodeid = key[3:]
                 nodetype = key[2]
                 if not newnodes.has_key(nodeid):
-                    newnodes[nodeid]={}
+                    newnodes[nodeid] = {}
                 if nodetype == "n":
                     newnodes[nodeid]["name"] = request.POST[key]
                 elif nodetype == "g":
@@ -153,7 +174,7 @@ def graphedit(request, project):
                 linktype = key[2]
 
                 if not newlinks.has_key(linkid):
-                    newlinks[linkid]={}
+                    newlinks[linkid] = {}
 
                 if linktype == "s":
                     newlinks[linkid]["source"] = request.POST[key]
@@ -166,62 +187,53 @@ def graphedit(request, project):
                 elif linktype == "w":
                     newlinks[linkid]["weight"] = request.POST[key]
 
-          #  if key[0:2] == "t_":
-          #      nodeid = request.POST[key]
-          #      delnodes.append(nodeid)
+                    #  if key[0:2] == "t_":
+                    #      nodeid = request.POST[key]
+                    #      delnodes.append(nodeid)
 
 
-            #if key[0:2] == "d_":
-            #    linkid = request.POST[key]
-            #    dellinks.append(linkid)
-
-
-
-
+                    # if key[0:2] == "d_":
+                    #    linkid = request.POST[key]
+                    #    dellinks.append(linkid)
 
     obj.nodeset_set.all().delete();
     for id, node in newnodes.items():
-        obj.nodeset_set.update_or_create(name = node["name"], idnumber = int(node["id"]), group = node["group"] )
-       # else:
-       #     obj.nodeset_set.update_or_create(name = node[0], idnumber = int(node[1]), group = "2")
-       # nodedict[node[1]] = node[0]
-       # i+=1
+        obj.nodeset_set.update_or_create(name=node["name"], idnumber=int(node["id"]), group=node["group"])
+        # else:
+        #     obj.nodeset_set.update_or_create(name = node[0], idnumber = int(node[1]), group = "2")
+        # nodedict[node[1]] = node[0]
+        # i+=1
 
     obj.network_set.all().delete();
     for id, link in newlinks.items():
-        obj.network_set.update_or_create(source = link["source"], sourceID = int(link["sourceid"]),
-                               target =link["target"], targetID = int(link["targetid"]),
-                               weight= float(link["weight"]))
+        obj.network_set.update_or_create(source=link["source"], sourceID=int(link["sourceid"]),
+                                         target=link["target"], targetID=int(link["targetid"]),
+                                         weight=float(link["weight"]))
 
 
-    #for nodeid in delnodes:
-     #   obj.nodeset_set.filter(idnumber = int(nodeid)).delete()
+        # for nodeid in delnodes:
+        #   obj.nodeset_set.filter(idnumber = int(nodeid)).delete()
 
-    #for linkid in dellinks:
+        # for linkid in dellinks:
 
-     #   obj.network_set.filter(pk = int(linkid)).delete()
+        #   obj.network_set.filter(pk = int(linkid)).delete()
 
-
-
-    url = '/projects/'+project+'/'
+    url = '/projects/' + project + '/'
     return redirect(url)
-
-
 
 
 def analyzer_centrality(request, project):
     projects = Project.objects.all()
     obj = get_project(request, project)
 
-
     G = nx.DiGraph()
     nodes = obj.nodeset_set.all()
     links = obj.network_set.all()
     for node in nodes:
-        G.add_node(node.idnumber, name = node.name)
+        G.add_node(node.idnumber, name=node.name)
 
     for link in links:
-        G.add_edge(link.sourceID, link.targetID, weight = link.weight)
+        G.add_edge(link.sourceID, link.targetID, weight=link.weight)
 
     indeg_centrality = nx.in_degree_centrality(G)
     outdeg_centrality = nx.out_degree_centrality(G)
@@ -230,27 +242,27 @@ def analyzer_centrality(request, project):
     betweenness_centrality = nx.betweenness_centrality(G)
 
     for key, value in indeg_centrality.items():
-        p = obj.nodeset_set.filter(idnumber = key)
-        p.update(indegree_centrality = round(value,3))
+        p = obj.nodeset_set.filter(idnumber=key)
+        p.update(indegree_centrality=round(value, 3))
 
     for key, value in outdeg_centrality.items():
-        p = obj.nodeset_set.filter(idnumber = key)
-        p.update(outdegree_centrality = round(value,3))
+        p = obj.nodeset_set.filter(idnumber=key)
+        p.update(outdegree_centrality=round(value, 3))
 
     for key, value in deg_centrality.items():
-        p = obj.nodeset_set.filter(idnumber = key)
-        p.update(degree_centrality = round(value,3))
+        p = obj.nodeset_set.filter(idnumber=key)
+        p.update(degree_centrality=round(value, 3))
 
     for key, value in closeness_centrality.items():
-        p = obj.nodeset_set.filter(idnumber = key)
-        p.update(closeness_centrality = round(value,3))
+        p = obj.nodeset_set.filter(idnumber=key)
+        p.update(closeness_centrality=round(value, 3))
 
     for key, value in betweenness_centrality.items():
-        p = obj.nodeset_set.filter(idnumber = key)
-        p.update(betweenness_centrality = round(value,3))
+        p = obj.nodeset_set.filter(idnumber=key)
+        p.update(betweenness_centrality=round(value, 3))
 
     nodeset = obj.nodeset_set.all()
-    context = {'nodeset' : nodeset,
+    context = {'nodeset': nodeset,
                'object': obj,
                'projects': projects,
                }

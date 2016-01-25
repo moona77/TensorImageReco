@@ -11,14 +11,25 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
+            name='Keyword',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('node', models.CharField(max_length=100)),
+            ],
+            options={
+                'ordering': ['node'],
+                'verbose_name': 'keyword',
+            },
+        ),
+        migrations.CreateModel(
             name='Network',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('source', models.CharField(max_length=20)),
+                ('source', models.CharField(max_length=100)),
                 ('sourceID', models.IntegerField(default=0)),
-                ('target', models.CharField(max_length=20, verbose_name=b'Nodeset')),
+                ('target', models.CharField(max_length=100)),
                 ('targetID', models.IntegerField(default=0)),
-                ('weight', models.FloatField()),
+                ('weight', models.CharField(max_length=20)),
             ],
             options={
                 'ordering': ['sourceID'],
@@ -27,49 +38,46 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
+            name='NewsData',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('Title', models.CharField(max_length=200)),
+                ('Date', models.DateTimeField()),
+                ('Url', models.URLField(unique=True, verbose_name='URL', db_index=True)),
+                ('Article', models.TextField()),
+            ],
+            options={
+                'ordering': ('Title',),
+                'verbose_name': 'New',
+            },
+        ),
+        migrations.CreateModel(
             name='Nodeset',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(help_text='Name to display', max_length=20, verbose_name='node name')),
-                ('idnumber', models.IntegerField(default=0)),
                 ('group', models.CharField(max_length=20, verbose_name='Group name')),
-                ('desc', models.CharField(help_text='Desc to display', max_length=200, verbose_name='descrpition')),
-                ('springx', models.FloatField(default=0)),
-                ('springy', models.FloatField(default=0)),
+                ('x', models.FloatField(default=0)),
+                ('y', models.FloatField(default=0)),
                 ('indegree_centrality', models.FloatField(default=0)),
                 ('outdegree_centrality', models.FloatField(default=0)),
-                ('sumdegree_centrality', models.FloatField(default=0)),
-                ('incloseness_centrality', models.FloatField(default=0)),
-                ('outcloseness_centrality', models.FloatField(default=0)),
-                ('sumcloseness_centrality', models.FloatField(default=0)),
+                ('closeness_centrality', models.FloatField(default=0)),
                 ('betweenness_centrality', models.FloatField(default=0)),
             ],
             options={
-                'ordering': ['idnumber'],
+                'ordering': ['pk'],
                 'verbose_name': 'Nodeset',
                 'verbose_name_plural': 'Nodesets',
             },
         ),
-        migrations.CreateModel(
-            name='Project',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('name', models.CharField(help_text='Name to display', unique=True, max_length=100, verbose_name='Project name')),
-            ],
-            options={
-                'ordering': ['name'],
-                'verbose_name': 'Project',
-                'verbose_name_plural': 'Projects',
-            },
+        migrations.AddField(
+            model_name='keyword',
+            name='NewsData',
+            field=models.ForeignKey(to='netgraph.NewsData'),
         ),
         migrations.AddField(
-            model_name='nodeset',
-            name='project',
-            field=models.ForeignKey(verbose_name='Project', to='netgraph.Project'),
-        ),
-        migrations.AddField(
-            model_name='network',
-            name='project',
-            field=models.ForeignKey(verbose_name='Project', to='netgraph.Project'),
+            model_name='keyword',
+            name='nodeattr',
+            field=models.ForeignKey(to='netgraph.Nodeset'),
         ),
     ]
