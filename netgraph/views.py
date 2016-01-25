@@ -75,7 +75,7 @@ def poweranalysis(request):
                         if search_form.cleaned_data['univ']:
                             group = "Univ/Professor"
 
-                        key_all = news.keyword_set.filter(node=context["search_query"])|news.keyword_set.filter(nodeattr__group=group)
+                        key_all = news.keyword_set.filter(node=context["search_query"])|news.keyword_set.filter(nodeattr__category=group)
                         for key1 in key_all:
                             temp.add(key1.nodeattr)
                             for key2 in key_all:
