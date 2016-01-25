@@ -25,12 +25,13 @@ Search
 {% endif %}
 {% if nodeset %}
         <table class="sort table">
-        <tr><th>label</th><th>group</th><th>pos x</th><th>pos y</th></tr>
+        <tr><th>label</th><th>group</th><th> query </th><th>pos x</th><th>pos y</th></tr>
         {% for node in nodeset %}
         <tr>
         <tbody>
         <td> {{ node.name }}</td>
         <td> {{ node.group }} </td>
+        <td> {{ node.isquery }} </td>
         <td>  {{ node.x }} </td>
         <td>  {{ node.y }} </td>
 

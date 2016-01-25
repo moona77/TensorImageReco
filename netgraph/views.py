@@ -102,6 +102,8 @@ def poweranalysis(request):
             pos = nx.spring_layout(G)
 
             for node in temp:
+                if node.name == context["search_query"]:
+                    node.isquery = True
                 print node.name,pos[node.pk][0],pos[node.pk][1]
                 node.x =pos[node.pk][0]
                 node.y =pos[node.pk][1]

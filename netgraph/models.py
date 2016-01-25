@@ -10,9 +10,13 @@ class Nodeset(models.Model):
         help_text=ugettext_lazy('Name to display')
     )
 
-    group = models.CharField(
+    category = models.CharField(
         max_length = 20,
         verbose_name=ugettext_lazy('Group name'),
+    )
+
+    isquery = models.BooleanField(
+        default=False
     )
 
     x =models.FloatField(
