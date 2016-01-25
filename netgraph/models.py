@@ -102,6 +102,10 @@ class NewsData(models.Model):
 
     )
 
+    Media = models.CharField(
+        max_length=200,
+    )
+
     Url = models.URLField(
         verbose_name=ugettext_lazy('URL'),
         db_index=True, unique=True,
