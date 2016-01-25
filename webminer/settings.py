@@ -64,7 +64,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'netpowermap', #os.path.join(BASE_DIR, 'db.sqlite3'),
         'USER': 'root',
-        'PASSWORD': '1234',
+        'PASSWORD': 'tkdlfka',
         'HOST':'localhost',
         'PORT':'3306',
 
