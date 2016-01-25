@@ -99,14 +99,30 @@ def poweranalysis(request):
                 G.add_edge(link.sourceid, link.targetid, weight = link.weight)
 
             indeg_centrality = nx.betweenness_centrality(G)
-            pos = nx.spring_layout(G)
+            pos = nx.shell_layout(G, scale=100)
+            print pos
+
+            max_x=0
+            min_x=100000
+            max_y=0
+            min_y=100000
+
+            for node in temp:
+                if pos[node.pk][0]>max_x:
+                    max_x = pos[node.pk][0]
+                if pos[node.pk][0]<min_x:
+                    min_x = pos[node.pk][0]
+                if pos[node.pk][1]>max_y:
+                    max_y = pos[node.pk][1]
+                if pos[node.pk][1]<min_y:
+                    min_y = pos[node.pk][1]
 
             for node in temp:
                 if node.name == context["search_query"]:
                     node.isquery = True
-                print node.name,pos[node.pk][0],pos[node.pk][1]
-                node.x =pos[node.pk][0]
-                node.y =pos[node.pk][1]
+               # print node.name,pos[node.pk][0],pos[node.pk][1]
+                node.x =(pos[node.pk][0]-min_x)/(max_x-min_x)
+                node.y =(pos[node.pk][1]-min_y)/(max_y-min_y)
 
             context['nodeset'] = temp
             #print temp

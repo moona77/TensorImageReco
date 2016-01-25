@@ -3,6 +3,11 @@
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <style>
 
+    svg {
+      background-color: #EEE;
+    }
+
+
     text {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         font-size: 13px;
@@ -52,13 +57,16 @@
 </div>
 <script type="text/javascript">
 
-var nodes=[],
+
+    var width =1000,
+        height =640;
+    var nodes=[],
     links=[];
 
     var nodeHash = {};
 
     {% for node in nodeset %}
-        var newNodesobj = { id: "{{ node.name }}", group: "{{ node.category }}", isquery: "{{ node.isquery }}", x: {{ node.x}}, y: {{ node.y}} };
+        var newNodesobj = { id: "{{ node.pk }}", label: "{{ node.name }}", group: "{{ node.category }}", isquery: "{{ node.isquery }}", x: {{ node.x}}*width/2, y: {{ node.y}}*height/2 };
         nodes.push(newNodesobj);
         nodeHash[String(nodes[{{ forloop.counter0 }}].id)] = {{ forloop.counter0 }};
     {% endfor %}
@@ -70,10 +78,10 @@ var nodes=[],
 
 
 
-
+    var color = d3.scale.category20();
     var vis = d3.select("body")
             .append("svg")
-            .attr("width", 800).attr("height", 800) //200,200
+            .attr("width", width).attr("height", height) //200,200
              //.data(nodes)
             .append("g")
             .attr("transform", "translate(100,150)");
@@ -86,7 +94,7 @@ var nodes=[],
             .offset([-10, 0])
             .html(function(d) {
                 //return "<strong>" + d.id+ "\t" + "id:" + "</strong><br/><span style='color:#fff'>" + d.id + "</span>";
-                return "<strong>" + "\t" + "Id:" + "</strong><br/><span style='color:#fff'>" + d.id + "</span>";
+                return "<strong>" + "\t" + "group:" + "</strong><br/><span style='color:#fff'>" + d.group + "</span>";
             })
 
 
@@ -102,6 +110,7 @@ var nodes=[],
             .attr("y2", function(d) { return d.target.y })
             .style("stroke", "rgb(6,120,155)")
             .style("stroke-linecap","round")
+            .style("opacity",function(d) { return d.weight })
             .style("stroke-dasharray", "3,3");
 
 
@@ -114,6 +123,7 @@ var nodes=[],
             .attr("r", "5px")
             .attr("fill", "gray")
             .style("opacity",".7")
+            .style("fill", function(d) { return color(d.group); })
             .on('mouseover', tip.show)
             .on('mouseout', tip.hide);
 
@@ -124,7 +134,7 @@ var nodes=[],
             .data(nodes)
             .enter()
             .append('text')
-            .text(function(d) {return '('+d.x+','+ d.y +')_' + 'ID:'+ d.id; })
+            .text(function(d) {return  d.label; })
             .attr('x', function(d){ return d.x; })
             .attr('y', function(d){ return d.y; })
             .style('font-family', "Malgun-Gothic")
