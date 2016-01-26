@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f71c45f8-25bc-4120-97e6-a91a42869bfd" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/netgraph/models.py" afterPath="$PROJECT_DIR$/netgraph/models.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/netgraph/views.py" afterPath="$PROJECT_DIR$/netgraph/views.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/netgraph/form.py" afterPath="$PROJECT_DIR$/netgraph/form.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/netgraph/templates/search-form.html" afterPath="$PROJECT_DIR$/netgraph/templates/search-form.html" />
     </list>
     <ignored path="webminer.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -25,6 +25,16 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="form.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/netgraph/form.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="14" column="19" selection-start-line="14" selection-start-column="19" selection-end-line="14" selection-end-column="19" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="powermapgraph.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/netgraph/templates/powermapgraph.html">
           <provider selected="true" editor-type-id="text-editor">
@@ -37,14 +47,24 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="models.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/netgraph/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.553719">
-              <caret line="166" column="5" selection-start-line="166" selection-start-column="5" selection-end-line="166" selection-end-column="5" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="22" />
               <folding>
                 <element signature="e#23#51#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="search-form.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/netgraph/templates/search-form.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.4130809">
+              <caret line="16" column="0" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -54,28 +74,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="-1.875">
               <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="0005_auto_20160125_1057.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/netgraph/migrations/0005_auto_20160125_1057.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding>
-                <element signature="e#24#63#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="0003_auto_20160122_1303.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/netgraph/migrations/0003_auto_20160122_1303.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -146,13 +144,14 @@
         <option value="$PROJECT_DIR$/netgraph/admin.py" />
         <option value="$PROJECT_DIR$/netgraph/templates/base.html" />
         <option value="$PROJECT_DIR$/netgraph/urls.py" />
-        <option value="$PROJECT_DIR$/netgraph/form.py" />
         <option value="$PROJECT_DIR$/webminer/settings.py" />
         <option value="$PROJECT_DIR$/netgraph/templates/graph.html" />
         <option value="$PROJECT_DIR$/netgraph/templates/poweranalysis.html" />
         <option value="$PROJECT_DIR$/netgraph/templates/powermapgraph.html" />
         <option value="$PROJECT_DIR$/netgraph/views.py" />
         <option value="$PROJECT_DIR$/netgraph/models.py" />
+        <option value="$PROJECT_DIR$/netgraph/form.py" />
+        <option value="$PROJECT_DIR$/netgraph/templates/search-form.html" />
       </list>
     </option>
   </component>
@@ -837,14 +836,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/netgraph/form.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="27" column="29" selection-start-line="27" selection-start-column="29" selection-end-line="27" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/webminer/settings.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -935,11 +926,27 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/netgraph/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.553719">
-          <caret line="166" column="5" selection-start-line="166" selection-start-column="5" selection-end-line="166" selection-end-column="5" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="22" />
           <folding>
             <element signature="e#23#51#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/netgraph/form.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="14" column="19" selection-start-line="14" selection-start-column="19" selection-end-line="14" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/netgraph/templates/search-form.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.4130809">
+          <caret line="16" column="0" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
