@@ -58,7 +58,7 @@ def poweranalysis(request):
 
                             for key2 in key_all:
                                 if(key1.nodeattr.pk<key2.nodeattr.pk):
-                                    obj, created = Network.objects.get_or_create(source = key1.node, sourceid = key1.nodeattr.pk, target = key2.node, targetid = key2.nodeattr.pk, weight =1)
+                                    obj, created = Network.objects.get_or_create(source = key1.node, sourceid = key1.nodeattr.pk, target = key2.node, targetid = key2.nodeattr.pk, defaults = {'weight':1})
                                     if not created:
                                         Network.objects.filter(pk=obj.pk).update(weight =obj.weight+1)
                                     Links.objects.create(node1 = key1.nodeattr.pk, node2 = key2.nodeattr.pk, link= obj, news= news)
@@ -96,10 +96,10 @@ def poweranalysis(request):
                     c.add(Nodeset.objects.get(pk=link.sourceid))
                     c.add(Nodeset.objects.get(pk=link.targetid))
             c = list(c)
-            print c
+            #print c
 
             context['network'] = Network.objects.all()
-            print context['network']
+            #print context['network']
 
 
             G = nx.Graph()
