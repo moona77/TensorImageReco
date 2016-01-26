@@ -125,8 +125,8 @@
       <file leaf-file-name="poweranalysis.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/netgraph/templates/poweranalysis.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6643718">
-              <caret line="50" column="12" selection-start-line="50" selection-start-column="12" selection-end-line="50" selection-end-column="12" />
+            <state vertical-scroll-proportion="0.6385542">
+              <caret line="49" column="31" selection-start-line="49" selection-start-column="31" selection-end-line="49" selection-end-column="31" />
               <folding />
             </state>
           </provider>
@@ -943,8 +943,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/netgraph/templates/poweranalysis.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6643718">
-          <caret line="50" column="12" selection-start-line="50" selection-start-column="12" selection-end-line="50" selection-end-column="12" />
+        <state vertical-scroll-proportion="0.6385542">
+          <caret line="49" column="31" selection-start-line="49" selection-start-column="31" selection-end-line="49" selection-end-column="31" />
           <folding />
         </state>
       </provider>
