@@ -173,6 +173,6 @@ class Links(models.Model):
 
 
     def __unicode__(self):
-        return _(self.node1 + "--"+self.node2)
+        return _(self.link.source+"-"+self.link.target)
 
 

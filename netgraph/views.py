@@ -45,6 +45,8 @@ def poweranalysis(request):
             Network.objects.all().delete()
             Links.objects.all().delete()
             temp = set()
+            graphtemp ={}
+
             for news in newsall:
                 key = news.keyword_set.filter(node=context["search_query"])
                 if key.count()>0:
@@ -54,43 +56,54 @@ def poweranalysis(request):
                         key_all = news.keyword_set.all()
                         for key1 in key_all:
 
-                            temp.add(key1.nodeattr)
-
                             for key2 in key_all:
                                 if(key1.nodeattr.pk<key2.nodeattr.pk):
                                     obj, created = Network.objects.get_or_create(source = key1.node, sourceid = key1.nodeattr.pk, target = key2.node, targetid = key2.nodeattr.pk, weight =1)
                                     if not created:
                                         Network.objects.filter(pk=obj.pk).update(weight =obj.weight+1)
-
                                     Links.objects.create(node1 = key1.nodeattr.pk, node2 = key2.nodeattr.pk, link= obj, news= news)
 
                     #조건 제한이 있을 경우
                     else:
                         if search_form.cleaned_data['pol']:
-                            group = "Politics"
+                            group = "정치인"
                         if search_form.cleaned_data['pub']:
-                            group = "Public Office"
+                            group = "공공기관"
                         if search_form.cleaned_data['ent']:
-                            group = "Enterprise"
+                            group = "기업"
                         if search_form.cleaned_data['univ']:
-                            group = "Univ/Professor"
+                            group = "대학/교수"
 
                         key_all = news.keyword_set.filter(node=context["search_query"])|news.keyword_set.filter(nodeattr__category=group)
                         for key1 in key_all:
-                            temp.add(key1.nodeattr)
+                            #temp.add(key1.nodeattr)
                             for key2 in key_all:
                                 if(key1.nodeattr.pk<key2.nodeattr.pk):
                                     obj, created = Network.objects.get_or_create(source = key1.node, sourceid = key1.nodeattr.pk, target = key2.node, targetid = key2.nodeattr.pk, weight =1)
                                     if not created:
                                         Network.objects.filter(pk=obj.pk).update(weight =obj.weight+1)
-
                                     Links.objects.create(node1 = key1.nodeattr.pk, node2 = key2.nodeattr.pk, link= obj, news= news)
 
             temp = list(temp)
+            c = set()
+
+            a = Network.objects.all()
+
+            for link in a:
+                if link.weight < 2:
+                    link.delete()
+                else:
+                    c.add(Nodeset.objects.get(pk=link.sourceid))
+                    c.add(Nodeset.objects.get(pk=link.targetid))
+            c = list(c)
+            print c
+
             context['network'] = Network.objects.all()
+            print context['network']
+
 
             G = nx.Graph()
-            nodes = temp
+            nodes = c
             links = context['network']
             for node in nodes:
                 G.add_node(node.pk, name = node.name)
@@ -99,15 +112,15 @@ def poweranalysis(request):
                 G.add_edge(link.sourceid, link.targetid, weight = link.weight)
 
             indeg_centrality = nx.betweenness_centrality(G)
-            pos = nx.shell_layout(G, scale=100)
-            print pos
+            pos = nx.shell_layout(G)
+
 
             max_x=0
             min_x=100000
             max_y=0
             min_y=100000
 
-            for node in temp:
+            for node in c:
                 if pos[node.pk][0]>max_x:
                     max_x = pos[node.pk][0]
                 if pos[node.pk][0]<min_x:
@@ -117,14 +130,14 @@ def poweranalysis(request):
                 if pos[node.pk][1]<min_y:
                     min_y = pos[node.pk][1]
 
-            for node in temp:
+            for node in c:
                 if node.name == context["search_query"]:
                     node.isquery = True
                # print node.name,pos[node.pk][0],pos[node.pk][1]
                 node.x =(pos[node.pk][0]-min_x)/(max_x-min_x)
                 node.y =(pos[node.pk][1]-min_y)/(max_y-min_y)
 
-            context['nodeset'] = temp
+            context['nodeset'] = c
             #print temp
             return render(
                     request,
