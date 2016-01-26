@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f71c45f8-25bc-4120-97e6-a91a42869bfd" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/netgraph/views.py" afterPath="$PROJECT_DIR$/netgraph/views.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/netgraph/templates/poweranalysis.html" afterPath="$PROJECT_DIR$/netgraph/templates/poweranalysis.html" />
     </list>
     <ignored path="webminer.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -38,7 +37,7 @@
       <file leaf-file-name="powermapgraph.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/netgraph/templates/powermapgraph.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-9.833333">
+            <state vertical-scroll-proportion="25.791666">
               <caret line="72" column="0" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
               <folding>
                 <marker date="1453709252087" expanded="true" signature="2399:2409" placeholder="..." />
@@ -101,11 +100,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/netgraph/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.76859504">
-              <caret line="117" column="19" selection-start-line="117" selection-start-column="19" selection-end-line="117" selection-end-column="19" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="93" column="33" selection-start-line="93" selection-start-column="33" selection-end-line="93" selection-end-column="33" />
               <folding>
                 <element signature="e#24#88#0" expanded="true" />
               </folding>
@@ -123,11 +122,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="poweranalysis.html" pinned="false" current-in-tab="false">
+      <file leaf-file-name="poweranalysis.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/netgraph/templates/poweranalysis.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-4.8333335">
-              <caret line="17" column="58" selection-start-line="17" selection-start-column="58" selection-end-line="17" selection-end-column="58" />
+            <state vertical-scroll-proportion="0.6643718">
+              <caret line="50" column="12" selection-start-line="50" selection-start-column="12" selection-end-line="50" selection-end-column="12" />
               <folding />
             </state>
           </provider>
@@ -146,12 +145,12 @@
         <option value="$PROJECT_DIR$/netgraph/urls.py" />
         <option value="$PROJECT_DIR$/webminer/settings.py" />
         <option value="$PROJECT_DIR$/netgraph/templates/graph.html" />
-        <option value="$PROJECT_DIR$/netgraph/templates/poweranalysis.html" />
         <option value="$PROJECT_DIR$/netgraph/templates/powermapgraph.html" />
         <option value="$PROJECT_DIR$/netgraph/models.py" />
         <option value="$PROJECT_DIR$/netgraph/form.py" />
         <option value="$PROJECT_DIR$/netgraph/templates/search-form.html" />
         <option value="$PROJECT_DIR$/netgraph/views.py" />
+        <option value="$PROJECT_DIR$/netgraph/templates/poweranalysis.html" />
       </list>
     </option>
   </component>
@@ -880,29 +879,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/netgraph/templates/poweranalysis.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-4.8333335">
-          <caret line="17" column="58" selection-start-line="17" selection-start-column="58" selection-end-line="17" selection-end-column="58" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/netgraph/templates/graphedit.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-1.875">
           <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/netgraph/templates/powermapgraph.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-9.833333">
-          <caret line="72" column="0" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
-          <folding>
-            <marker date="1453709252087" expanded="true" signature="2399:2409" placeholder="..." />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -942,11 +923,29 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/netgraph/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.76859504">
-          <caret line="117" column="19" selection-start-line="117" selection-start-column="19" selection-end-line="117" selection-end-column="19" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="93" column="33" selection-start-line="93" selection-start-column="33" selection-end-line="93" selection-end-column="33" />
           <folding>
             <element signature="e#24#88#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/netgraph/templates/powermapgraph.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="25.791666">
+          <caret line="72" column="0" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
+          <folding>
+            <marker date="1453709252087" expanded="true" signature="2399:2409" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/netgraph/templates/poweranalysis.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.6643718">
+          <caret line="50" column="12" selection-start-line="50" selection-start-column="12" selection-end-line="50" selection-end-column="12" />
+          <folding />
         </state>
       </provider>
     </entry>
