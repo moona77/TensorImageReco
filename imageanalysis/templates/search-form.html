@@ -1,12 +1,12 @@
 {% load i18n %}
-{% load crispy_forms_tags %}
+
 
 <form action="{% url 'poweranalysis' %}" method="post" enctype="multipart/form-data">
 {% csrf_token %}
 <div class="panel panel-primary">
 <div class="panel-heading"><h4 class="panel-title">검색</h4></div>
   <div class="panel-body">
-{{ search_form|crispy}}
+{{ search_form }}
 </div>
 <div class="panel-footer">
 <input type="submit" value= "검색"   class="btn btn-default" />
