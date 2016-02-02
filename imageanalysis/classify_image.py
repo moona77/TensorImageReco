@@ -54,9 +54,6 @@ tf.app.flags.DEFINE_string('image_file', '',
                            """Absolute path to image file.""")
 tf.app.flags.DEFINE_integer('num_top_predictions', 5,
                             """Display this many predictions.""")
-# pylint: disable=line-too-long
-DATA_URL = 'http://download.tensorflow.org/models/image/imagenet/inception-2015-12-05.tgz'
-# pylint: enable=line-too-long
 
 class NodeLookup(object):
   """Converts integer node ID's to human readable labels."""
