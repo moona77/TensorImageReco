@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+
+{% block breadcrumbs %}
+Search
+{% endblock %}
+
+{% block content %}
+{% include "search-form.html" %}
+{% if image %}
+    <img src="{% static 'tmpimage/tmpimg.jpg' %}">
+
+	<h4>업로드된 이미지는 <font color=red>{{ score }}%</font>의 확률로 다음과 같습니다</h4>
+    <h2>{{ image }} </h2>
+
+{% endif %}
+
+
+
+{% endblock %}
+
+
+
+

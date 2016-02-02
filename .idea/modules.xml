@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/netpowermap.iml" filepath="$PROJECT_DIR$/.idea/netpowermap.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/image recognition.iml" filepath="$PROJECT_DIR$/.idea/image recognition.iml" />
     </modules>
   </component>
 </project>

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+
+{% block breadcrumbs %}
+
+
+{% endblock %}
+
+
+<h1><a href="{% url 'home' %}">Welcome to WHTASIMAGE v0.01</a></h1>
+
+<div>
+tensorflow 이미지 분석 api를 이용하여 이미지를 업로드하면 딥러닝으로 분류된 결과를 보여줍니다.
+</div>
+
+{% endblock %}
